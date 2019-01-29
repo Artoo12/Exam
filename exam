@@ -1,0 +1,91 @@
+import org.junit.Assert;
+import org.junit.Test;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.concurrent.TimeUnit;
+
+import static junit.framework.TestCase.assertTrue;
+
+public class verifyLogin {
+
+    @Test
+    public void examVerifyLogin() {
+
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("http://automationpractice.com");
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        WebDriverWait WebDriverWait = new WebDriverWait(driver, 10);
+
+        WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"header\"]/div[2]/div/div/nav/div[1]/a")));
+        WebElement signInButton=driver.findElement(By.xpath("//*[@id=\"header\"]/div[2]/div/div/nav/div[1]/a"));
+        JavascriptExecutor ex=(JavascriptExecutor)driver;
+        ex.executeScript("arguments[0].click()", signInButton);
+
+        WebElement waitForEmail = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
+        assertTrue("Link is not displayed", waitForEmail.isDisplayed());
+        WebElement searchFieldEmail= driver.findElement(By.id("email"));
+        searchFieldEmail.sendKeys("laktionov_artem@ukr.net");
+
+        WebElement waitForPassword = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("passwd")));
+        assertTrue("Link is not displayed", waitForPassword.isDisplayed());
+        WebElement searchFieldPassword= driver.findElement(By.id("passwd"));
+        searchFieldPassword.sendKeys("12345678");
+
+        WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("SubmitLogin")));
+        WebElement signIn=driver.findElement(By.id("SubmitLogin"));
+        JavascriptExecutor exII=(JavascriptExecutor)driver;
+        exII.executeScript("arguments[0].click()", signIn);
+
+        WebElement waitForAccountDetails = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"header\"]/div[2]/div/div/nav/div[1]/a/span")));
+        assertTrue("Link is not displayed", waitForAccountDetails.isDisplayed());
+        String textDirection = driver.findElement(By.xpath("//*[@id=\"header\"]/div[2]/div/div/nav/div[1]/a/span")).getText();
+        Assert.assertTrue("Text not found!", textDirection.contains("Artem Laktionov"));
+        System.out.println("\nresult:  " + textDirection);
+        System.out.println("\nLogin verified.");
+
+        driver.quit();
+
+
+
+    }
+
+    @Test
+    public void examVerifySearch() {
+
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("http://automationpractice.com");
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        WebDriverWait WebDriverWait = new WebDriverWait(driver, 10);
+
+        WebElement waitForSearch = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("search_query_top")));
+        assertTrue("Link is not displayed", waitForSearch.isDisplayed());
+        WebElement searchFieldSearch= driver.findElement(By.id("search_query_top"));
+        searchFieldSearch.sendKeys("Blouse");
+        searchFieldSearch.sendKeys(Keys.RETURN);
+
+        WebElement waitForBlouse = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"center_column\"]/ul/li/div/div[2]/h5/a")));
+        assertTrue("Link is not displayed", waitForBlouse.isDisplayed());
+        String textDirection = driver.findElement(By.xpath("//*[@id=\"center_column\"]/ul/li/div/div[2]/h5/a")).getText();
+        Assert.assertTrue("Text not found!", textDirection.contains("Blouse"));
+        System.out.println("\nresult:  " + textDirection);
+        System.out.println("\nProduct search verified.");
+
+        driver.quit();
+
+
+    }
+    }
